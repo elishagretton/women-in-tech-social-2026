@@ -3,19 +3,487 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Christmas Social 🎄</title>
+  <title>Women in Tech Social | Starling &amp; Engine</title>
+  <meta name="description" content="A Women in Tech Social for Starling Bank and Engine. All women and non-binary people across technology are welcome. Thursday 19th November, 4pm onwards, Engine office.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- FONT: to change the font, swap this link and the two --font variables below -->
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    body { font-family: sans-serif; max-width: 600px; margin: 3rem auto; padding: 0 1rem; text-align: center; }
-    h1 { color: #b3202a; }
-    a.button { display: inline-block; margin-top: 1.5rem; padding: 0.8rem 1.5rem;
-               background: #1f7a3d; color: white; text-decoration: none; border-radius: 6px; }
+    :root {
+      --font: "Bricolage Grotesque", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+      --bg: #150d2b;
+      --bg-soft: #21173f;
+      --card: rgba(38, 27, 77, 0.78);
+      --ink: #f6f3ff;
+      --muted: #b9b0dc;
+      --teal: #00e0c3;
+      --teal-dark: #04382f;
+      --lilac: #a98bff;
+      --pink: #ff7ad9;
+      --line: #3d3070;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font);
+      font-size: 1.0625rem;
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Glowing background blobs */
+    .glow { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+    .glow i {
+      position: absolute;
+      width: 38rem; height: 38rem;
+      border-radius: 50%;
+      filter: blur(90px);
+      opacity: 0.42;
+      animation: drift 18s ease-in-out infinite alternate;
+    }
+    .glow i:nth-child(1) { background: #6c3bff; top: -12rem; left: -10rem; }
+    .glow i:nth-child(2) { background: #00c9b0; top: 30%; right: -16rem; animation-delay: -6s; opacity: 0.28; }
+    .glow i:nth-child(3) { background: #ff4fc3; bottom: -16rem; left: 10%; animation-delay: -11s; opacity: 0.22; }
+    @keyframes drift { to { transform: translate(4rem, 3rem) scale(1.12); } }
+
+    #fall { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+
+    .wrap { position: relative; z-index: 2; max-width: 52rem; margin: 0 auto; padding: 0 1.25rem; }
+
+    /* Hero */
+    header { padding: 4.5rem 0 2rem; text-align: center; }
+    .code-line { font-family: var(--mono); font-size: 0.95rem; color: var(--teal); margin: 0 0 1.25rem; }
+    .code-line span { color: var(--muted); }
+    h1 {
+      font-size: clamp(3rem, 12vw, 6.5rem);
+      line-height: 0.92;
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      margin: 0 0 1.5rem;
+    }
+    h1 .grad {
+      background: linear-gradient(100deg, var(--teal) 0%, var(--lilac) 50%, var(--pink) 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: shimmer 6s linear infinite;
+    }
+    @keyframes shimmer { to { background-position: 200% center; } }
+
+    .when-pill {
+      display: inline-block;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--teal-dark);
+      background: var(--teal);
+      padding: 0.45rem 1.2rem;
+      border-radius: 999px;
+      margin: 0 0 1.5rem;
+      box-shadow: 0 0 0 0 rgba(0, 224, 195, 0.6);
+      animation: pulse 2.6s ease-out infinite;
+    }
+    @keyframes pulse { 70% { box-shadow: 0 0 0 16px rgba(0, 224, 195, 0); } 100% { box-shadow: 0 0 0 0 rgba(0, 224, 195, 0); } }
+
+    .lede { font-size: 1.25rem; max-width: 36rem; margin: 0 auto 2rem; }
+
+    /* Countdown */
+    .countdown { margin: 0 0 1rem; }
+    .countdown p { margin: 0 0 0.75rem; color: var(--muted); font-size: 0.95rem; }
+    .tiles { display: flex; gap: 0.75rem; justify-content: center; }
+    .tile {
+      min-width: 5.2rem;
+      padding: 0.8rem 0.5rem;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 1rem;
+      backdrop-filter: blur(6px);
+    }
+    .tile b { display: block; font-family: var(--mono); font-size: 2rem; line-height: 1.1; color: var(--teal); }
+    .tile small { color: var(--muted); font-size: 0.8rem; }
+    .live { font-size: 1.4rem; font-weight: 800; color: var(--teal); margin: 0; }
+
+    #confetti-canvas { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; }
+
+    /* Detail cards */
+    .facts {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+      gap: 1rem;
+      padding: 3rem 0 1rem;
+      margin: 0;
+    }
+    .fact {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 1.25rem;
+      padding: 1.4rem 1.25rem;
+      backdrop-filter: blur(6px);
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+    .fact:hover { transform: translateY(-4px); border-color: var(--teal); }
+    .fact .ico { font-size: 1.8rem; line-height: 1; margin-bottom: 0.5rem; }
+    .fact dt { color: var(--muted); font-size: 0.9rem; font-weight: 600; }
+    .fact dd { margin: 0.1rem 0 0; font-weight: 700; font-size: 1.15rem; line-height: 1.35; }
+    .fact a { color: var(--teal); font-weight: 600; font-size: 0.95rem; }
+    .fact a:focus-visible { outline: 3px solid var(--lilac); outline-offset: 3px; border-radius: 4px; }
+
+    /* Agenda timeline */
+    section { padding: 2.5rem 0; }
+    h2 { font-size: clamp(1.9rem, 5vw, 2.5rem); letter-spacing: -0.02em; margin: 0 0 2rem; text-align: center; }
+
+    ol.agenda { list-style: none; margin: 0; padding: 0 0 0 1.5rem; position: relative; }
+    ol.agenda::before {
+      content: ""; position: absolute; left: 1.3rem; top: 0.5rem; bottom: 0.5rem; width: 3px;
+      background: linear-gradient(var(--teal), var(--lilac), var(--pink));
+      border-radius: 3px;
+    }
+    .agenda li { position: relative; padding: 0 0 1.5rem 2.8rem; }
+    .agenda .dot {
+      position: absolute; left: -0.6rem; top: 0.1rem;
+      width: 2.6rem; height: 2.6rem;
+      display: grid; place-items: center;
+      font-size: 1.3rem;
+      background: var(--bg);
+      border: 3px solid var(--teal);
+      border-radius: 50%;
+    }
+    .agenda .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 1.1rem;
+      padding: 1rem 1.25rem;
+      backdrop-filter: blur(6px);
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+    .agenda li:hover .card { transform: translateX(6px); border-color: var(--lilac); }
+    .agenda time { font-family: var(--mono); font-weight: 600; color: var(--teal); font-size: 0.95rem; }
+    .agenda li.starling time { color: var(--pink); }
+    .agenda h3 { margin: 0.15rem 0 0.25rem; font-size: 1.25rem; }
+    .agenda p { margin: 0; color: var(--muted); }
+    .agenda .tbc { color: var(--pink); font-weight: 700; }
+
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .reveal.in { opacity: 1; transform: none; }
+
+    /* RSVP */
+    .rsvp {
+      text-align: center;
+      background: linear-gradient(135deg, rgba(0, 224, 195, 0.16), rgba(169, 139, 255, 0.2), rgba(255, 122, 217, 0.16));
+      border: 2px solid var(--teal);
+      border-radius: 1.75rem;
+      padding: 2.5rem 1.5rem;
+      margin: 1rem 0 4rem;
+    }
+    .rsvp h2 { margin-bottom: 0.5rem; }
+    .rsvp p { margin: 0 auto 1.5rem; color: var(--muted); max-width: 30rem; }
+    .rsvp p.sleeps { color: var(--teal); font-weight: 800; font-size: 1.35rem; margin-bottom: 1.25rem; }
+    .travel { margin: 2rem auto 0; padding-top: 1.5rem; border-top: 1px solid var(--line); max-width: 32rem; }
+    .travel h3 { margin: 0 0 0.4rem; font-size: 1.05rem; }
+    .travel p { margin: 0 auto; font-size: 0.95rem; }
+    .btns { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; }
+    a.button {
+      display: inline-block;
+      background: var(--teal);
+      color: var(--teal-dark);
+      font-weight: 800;
+      font-size: 1.15rem;
+      text-decoration: none;
+      padding: 0.95rem 2rem;
+      border-radius: 999px;
+      transition: transform 0.15s ease;
+    }
+    a.button.ghost { background: transparent; color: var(--ink); border: 2px solid var(--lilac); }
+    a.button:hover { transform: translateY(-3px) scale(1.03); }
+    a.button:focus-visible { outline: 3px solid var(--pink); outline-offset: 3px; }
+
+
+    @media (max-width: 30rem) {
+      .tile { min-width: 4.2rem; }
+      .tile b { font-size: 1.6rem; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .glow i, h1 .grad, .when-pill { animation: none; }
+      .reveal { opacity: 1; transform: none; transition: none; }
+      .fact, .agenda .card, a.button { transition: none; }
+    }
   </style>
 </head>
 <body>
-  <h1>🎄 Christmas Social 🎄</h1>
-  <p><strong>When:</strong> Friday 18 December, 6pm</p>
-  <p><strong>Where:</strong> [venue name and address]</p>
-  <p>Join us for food, drinks and festive fun!</p>
-  <a class="button" href="PASTE-YOUR-GOOGLE-FORM-LINK-HERE">RSVP here</a>
+  <div class="glow" aria-hidden="true"><i></i><i></i><i></i></div>
+  <canvas id="fall" aria-hidden="true"></canvas>
+
+  <div class="wrap">
+    <header>
+      <p class="code-line"><span>//</span> starling + engine</p>
+      <h1>Women in <span class="grad">Tech</span> Social</h1>
+      <p class="when-pill">Thurs 19th Nov &middot; 4pm onwards</p>
+      <p class="lede">A relaxed social to come together, meet people across technology and celebrate everything we’ve achieved so far. All women and non-binary people in technology are welcome!</p>
+
+      <div class="countdown" id="countdown">
+        <p>Counting down to the social</p>
+        <div class="tiles" role="timer" aria-label="Time until the social">
+          <div class="tile"><b id="cd-d">--</b><small>days</small></div>
+          <div class="tile"><b id="cd-h">--</b><small>hours</small></div>
+          <div class="tile"><b id="cd-m">--</b><small>mins</small></div>
+          <div class="tile"><b id="cd-s">--</b><small>secs</small></div>
+        </div>
+      </div>
+    </header>
+  </div>
+
+  <canvas id="confetti-canvas" aria-hidden="true"></canvas>
+
+  <div class="wrap">
+    <dl class="facts">
+      <div class="fact">
+        <div class="ico" aria-hidden="true">📅</div>
+        <dt>When</dt>
+        <dd>Thurs 19th Nov, 4pm onwards</dd>
+      </div>
+      <div class="fact">
+        <div class="ico" aria-hidden="true">📍</div>
+        <dt>Where</dt>
+        <dd>Engine office<br>199 Bishopsgate, London</dd>
+        <a href="https://www.google.com/maps/search/?api=1&amp;query=199+Bishopsgate+London" target="_blank" rel="noopener">Open in Maps</a>
+      </div>
+      <div class="fact">
+        <div class="ico" aria-hidden="true">💜</div>
+        <dt>Who</dt>
+        <dd>All women and non-binary people across technology</dd>
+      </div>
+    </dl>
+
+    <main>
+      <section aria-labelledby="agenda-title">
+        <h2 id="agenda-title">What’s on</h2>
+        <ol class="agenda">
+          <li class="starling reveal">
+            <span class="dot" aria-hidden="true">🚶‍♀️</span>
+            <div class="card">
+              <time>3:45pm</time>
+              <h3>Starling, let’s go!</h3>
+              <p>Head over to the Engine office together.</p>
+            </div>
+          </li>
+          <li class="reveal">
+            <span class="dot" aria-hidden="true">🥂</span>
+            <div class="card">
+              <time>4:00pm</time>
+              <h3>Time to settle in at the Engine office</h3>
+              <p>Grab a drink and a snack, say hello and meet someone new.</p>
+            </div>
+          </li>
+          <li class="reveal">
+            <span class="dot" aria-hidden="true">🎤</span>
+            <div class="card">
+              <time>4:15pm</time>
+              <h3>Kick-off with an All-Hands</h3>
+              <p>Four lightning talks. <span class="tbc">Speakers TBC!</span></p>
+            </div>
+          </li>
+          <li class="reveal">
+            <span class="dot" aria-hidden="true">🎲</span>
+            <div class="card">
+              <time>Then</time>
+              <h3>Quizmaster time</h3>
+              <p>Team up for a pub quiz.</p>
+            </div>
+          </li>
+          <li class="reveal">
+            <span class="dot" aria-hidden="true">🍕</span>
+            <div class="card">
+              <time>Later</time>
+              <h3>Eat, drink and mingle</h3>
+              <p>Food and drinks provided by our caterer. Please fill out the form below and specify any dietary requirements for the pre-order.</p>
+            </div>
+          </li>
+        </ol>
+      </section>
+
+      <section class="rsvp" id="rsvp" aria-labelledby="rsvp-title">
+        <h2 id="rsvp-title">RSVP</h2>
+        <p class="sleeps">Come and celebrate with us! 🎉</p>
+        <p>Please fill in the form to tell us if you’re coming and let us know about any dietary requirements. A calendar invite will follow soon.</p>
+        <div class="btns">
+          <a class="button" href="PASTE-YOUR-GOOGLE-FORM-LINK-HERE">Fill in the form</a>
+        </div>
+        <div class="travel">
+          <h3>Travel and expenses</h3>
+          <p>Travelling to the London office? Please request your travel and accommodation through your manager and on Travelperk.</p>
+        </div>
+      </section>
+    </main>
+
+  </div>
+
+  <script>
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    // Countdown to 4pm on Thursday 19 November 2026 (UK time is GMT in November).
+    (function () {
+      var target = new Date("2026-11-19T16:00:00Z").getTime();
+      var box = document.getElementById("countdown");
+      function pad(n) { return n < 10 ? "0" + n : String(n); }
+      function update() {
+        var diff = target - Date.now();
+        if (diff <= 0) {
+          box.innerHTML = '<p class="live">It’s happening, see you there!</p>';
+          return false;
+        }
+        var s = Math.floor(diff / 1000);
+        document.getElementById("cd-d").textContent = Math.floor(s / 86400);
+        document.getElementById("cd-h").textContent = pad(Math.floor(s % 86400 / 3600));
+        document.getElementById("cd-m").textContent = pad(Math.floor(s % 3600 / 60));
+        document.getElementById("cd-s").textContent = pad(s % 60);
+        return true;
+      }
+      if (update()) {
+        var timer = setInterval(function () { if (!update()) clearInterval(timer); }, 1000);
+      }
+    })();
+
+
+
+    // Agenda items fade in as they scroll into view.
+    (function () {
+      var items = document.querySelectorAll(".reveal");
+      if (reduce || !("IntersectionObserver" in window)) {
+        for (var i = 0; i < items.length; i++) items[i].classList.add("in");
+        return;
+      }
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+        });
+      }, { threshold: 0.2 });
+      items.forEach(function (el) { io.observe(el); });
+    })();
+
+    // Confetti: one burst when the page opens.
+    (function () {
+      if (reduce) return;
+      var canvas = document.getElementById("confetti-canvas");
+      var ctx = canvas.getContext("2d");
+      var colours = ["#00e0c3", "#a98bff", "#ff7ad9", "#ffd166", "#f6f3ff"];
+      var bits = [];
+      var running = false;
+
+      function size() {
+        var dpr = window.devicePixelRatio || 1;
+        canvas.width = window.innerWidth * dpr;
+        canvas.height = window.innerHeight * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+
+      function burst(cx, cy) {
+        size();
+        for (var i = 0; i < 120; i++) {
+          var a = Math.random() * Math.PI * 2;
+          var v = 4 + Math.random() * 9;
+          bits.push({
+            x: cx, y: cy,
+            vx: Math.cos(a) * v, vy: Math.sin(a) * v - 5,
+            w: 5 + Math.random() * 6, h: 3 + Math.random() * 4,
+            rot: Math.random() * 6.28, vr: (Math.random() - 0.5) * 0.4,
+            colour: colours[Math.floor(Math.random() * colours.length)],
+            life: 0
+          });
+        }
+        if (!running) { running = true; requestAnimationFrame(step); }
+      }
+
+      function step() {
+        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        for (var i = bits.length - 1; i >= 0; i--) {
+          var b = bits[i];
+          b.vy += 0.22; b.vx *= 0.99;
+          b.x += b.vx; b.y += b.vy; b.rot += b.vr; b.life++;
+          if (b.y > window.innerHeight + 20 || b.life > 240) { bits.splice(i, 1); continue; }
+          ctx.save();
+          ctx.translate(b.x, b.y);
+          ctx.rotate(b.rot);
+          ctx.globalAlpha = Math.max(0, 1 - b.life / 240);
+          ctx.fillStyle = b.colour;
+          ctx.fillRect(-b.w / 2, -b.h / 2, b.w, b.h);
+          ctx.restore();
+        }
+        if (bits.length) requestAnimationFrame(step);
+        else { running = false; ctx.clearRect(0, 0, window.innerWidth, window.innerHeight); }
+      }
+
+      // Opening burst from the top of the page, once everything has loaded.
+      window.addEventListener("load", function () {
+        setTimeout(function () { burst(window.innerWidth / 2, window.innerHeight * 0.3); }, 400);
+      });
+    })();
+
+    // Falling code symbols. Skipped if the visitor prefers reduced motion.
+    (function () {
+      if (reduce) return;
+      var canvas = document.getElementById("fall");
+      var ctx = canvas.getContext("2d");
+      var glyphs = ["{ }", "</>", "=>", "&&", "( )", "[ ]", ";", "0", "1", "#", "\u2640", "\u2726"];
+      var colours = ["#00e0c3", "#a98bff", "#ff7ad9", "#f6f3ff"];
+      var drops = [];
+      var w, h, dpr;
+
+      function resize() {
+        dpr = window.devicePixelRatio || 1;
+        w = window.innerWidth;
+        h = window.innerHeight;
+        canvas.width = w * dpr;
+        canvas.height = h * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        var count = Math.max(18, Math.min(45, Math.round(w / 32)));
+        while (drops.length < count) drops.push(make(true));
+        drops.length = count;
+      }
+
+      function make(anywhere) {
+        return {
+          x: Math.random() * w,
+          y: anywhere ? Math.random() * h : -30,
+          size: 12 + Math.random() * 16,
+          speed: 0.35 + Math.random() * 0.9,
+          sway: Math.random() * Math.PI * 2,
+          swaySpeed: 0.004 + Math.random() * 0.01,
+          alpha: 0.12 + Math.random() * 0.3,
+          glyph: glyphs[Math.floor(Math.random() * glyphs.length)],
+          colour: colours[Math.floor(Math.random() * colours.length)]
+        };
+      }
+
+      function tick() {
+        ctx.clearRect(0, 0, w, h);
+        var mono = getComputedStyle(document.documentElement).getPropertyValue("--mono");
+        for (var i = 0; i < drops.length; i++) {
+          var d = drops[i];
+          d.y += d.speed;
+          d.sway += d.swaySpeed;
+          var x = d.x + Math.sin(d.sway) * 18;
+          if (d.y > h + 30) drops[i] = make(false);
+          ctx.globalAlpha = d.alpha;
+          ctx.fillStyle = d.colour;
+          ctx.font = "600 " + d.size + "px " + mono;
+          ctx.fillText(d.glyph, x, d.y);
+        }
+        requestAnimationFrame(tick);
+      }
+
+      window.addEventListener("resize", resize);
+      resize();
+      requestAnimationFrame(tick);
+    })();
+  </script>
 </body>
 </html>
